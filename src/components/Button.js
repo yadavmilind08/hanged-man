@@ -3,11 +3,6 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Colors } from "../constants/color";
 
 export const Button = ({ children, disabled, onPress }) => {
-  const onPressHandler = () => {
-    if (!disabled) {
-      onPress();
-    }
-  };
   return (
     <Pressable
       style={({ pressed }) => [
@@ -15,7 +10,8 @@ export const Button = ({ children, disabled, onPress }) => {
         pressed && styles.pressed,
         disabled && styles.disabled,
       ]}
-      onPress={onPressHandler}
+      disabled={disabled}
+      onPress={onPress}
     >
       <View>
         <Text style={styles.buttonText}>{children}</Text>
