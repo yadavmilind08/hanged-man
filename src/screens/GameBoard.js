@@ -13,7 +13,7 @@ export const GameBoard = () => {
   const [remainingLives, setRemainingLives] = useState(7);
   const [score, setScore] = useState(0);
   const [topScore, setTopScore] = useState(0);
-  const [isMatch, setIsMatch] = useState(false);
+  const [letters, setLetters] = useState([]);
 
   useEffect(() => {
     async function fetchTopScore() {
@@ -39,35 +39,49 @@ export const GameBoard = () => {
 
   const onSuccessHandler = () => {
     setRemainingLives(7);
-    setIsMatch(false);
+    setLetters([]);
     getWord();
   };
 
   const onEndHandler = () => {
     setRemainingLives(7);
     setScore(0);
-    setIsMatch(false);
+    setLetters([]);
     getWord();
   };
 
   const onSubmitHandler = () => {
     const result = word.split("").find((x) => x === value);
     if (result) {
-      const totalScore = score + 1;
-      setScore(totalScore);
-      if (totalScore >= topScore) {
-        setTopScore(totalScore);
-        AsyncStorage.setItem("topScore", totalScore.toString());
+      if (!letters.includes(value)) {
+        const newLetters = [...letters, value];
+        setLetters(newLetters);
+
+        if (word.split("").every((x) => newLetters.includes(x))) {
+          const totalScore = score + 1;
+          setScore(totalScore);
+          if (totalScore >= topScore) {
+            setTopScore(totalScore);
+            AsyncStorage.setItem("topScore", totalScore.toString());
+          }
+          Alert.alert(
+            "Congatulations",
+            `
+            You guessed whole word
+            `,
+            [{ text: "Ok", onPress: () => onSuccessHandler() }]
+          );
+        } else {
+          Alert.alert(
+            "Correct",
+            `
+            You guessed "${value}"
+            From word "${word}"
+            `,
+            [{ text: "Ok" }]
+          );
+        }
       }
-      setIsMatch(true);
-      Alert.alert(
-        "Correct",
-        `
-        You guessed "${value}"
-        From word "${word}"
-        `,
-        [{ text: "Ok", onPress: () => onSuccessHandler() }]
-      );
     } else {
       const lives = remainingLives - 1;
       setRemainingLives(lives);
@@ -103,7 +117,7 @@ export const GameBoard = () => {
       <View style={styles.wordSection}>
         {word.split("").map((w, index) => (
           <View key={index}>
-            <Text style={styles.letter}>{isMatch ? w : "_"}</Text>
+            <Text style={styles.letter}>{letters.includes(w) ? w : "_"}</Text>
           </View>
         ))}
       </View>
