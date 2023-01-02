@@ -6,6 +6,7 @@ import { Input } from "../components/Input";
 import { Button } from "../components/Button";
 import { Header } from "../components/Header";
 import { Score } from "../components/Score";
+import { Word } from "../components/Word";
 
 export const GameBoard = () => {
   const [value, setValue] = useState("");
@@ -76,7 +77,6 @@ export const GameBoard = () => {
             "Correct",
             `
             You guessed "${value}"
-            From word "${word}"
             `,
             [{ text: "Ok" }]
           );
@@ -114,13 +114,7 @@ export const GameBoard = () => {
           </Button>
         </View>
       </View>
-      <View style={styles.wordSection}>
-        {word.split("").map((w, index) => (
-          <View key={index}>
-            <Text style={styles.letter}>{letters.includes(w) ? w : "_"}</Text>
-          </View>
-        ))}
-      </View>
+      <Word wordLetters={word.split("")} triedLetters={letters} />
     </View>
   );
 };
@@ -148,15 +142,5 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginTop: 15,
     justifyContent: "center",
-  },
-  wordSection: {
-    marginTop: 30,
-    flexDirection: "row",
-    justifyContent: "center",
-  },
-  letter: {
-    marginRight: 10,
-    fontSize: 24,
-    fontWeight: "400",
   },
 });
