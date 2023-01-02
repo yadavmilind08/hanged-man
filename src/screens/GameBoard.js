@@ -5,6 +5,7 @@ import { wordList } from "../constants/word-list";
 import { Input } from "../components/Input";
 import { Button } from "../components/Button";
 import { Header } from "../components/Header";
+import { Score } from "../components/Score";
 
 export const GameBoard = () => {
   const [value, setValue] = useState("");
@@ -85,24 +86,9 @@ export const GameBoard = () => {
     <View style={styles.boardContainer}>
       <Header>Hanged Man</Header>
       <View style={styles.scoreSection}>
-        <View>
-          <Text style={styles.label}>Lives Remain</Text>
-          <View style={styles.valueContainer}>
-            <Text style={styles.value}>{remainingLives}</Text>
-          </View>
-        </View>
-        <View>
-          <Text style={styles.label}>Top Score</Text>
-          <View style={styles.valueContainer}>
-            <Text style={styles.value}>{topScore}</Text>
-          </View>
-        </View>
-        <View>
-          <Text style={styles.label}>Score</Text>
-          <View style={styles.valueContainer}>
-            <Text style={styles.value}>{score}</Text>
-          </View>
-        </View>
+        <Score label="Lives Remain" value={remainingLives} />
+        <Score label="Top Score" value={topScore} />
+        <Score label="Score" value={score} />
       </View>
       <View style={styles.gameSection}>
         <View style={styles.input}>
@@ -135,18 +121,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
-  },
-  label: {
-    fontSize: 20,
-    fontWeight: "500",
-  },
-  valueContainer: {
-    alignItems: "center",
-    marginTop: 5,
-  },
-  value: {
-    fontSize: 16,
-    fontWeight: "400",
   },
   gameSection: {
     marginTop: 30,
