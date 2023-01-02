@@ -4,6 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { wordList } from "../constants/word-list";
 import { Input } from "../components/Input";
 import { Button } from "../components/Button";
+import { Header } from "../components/Header";
 
 export const GameBoard = () => {
   const [value, setValue] = useState("");
@@ -82,9 +83,7 @@ export const GameBoard = () => {
 
   return (
     <View style={styles.boardContainer}>
-      <View style={styles.headerSection}>
-        <Text style={styles.appLabel}>Hanged Man</Text>
-      </View>
+      <Header>Hanged Man</Header>
       <View style={styles.scoreSection}>
         <View>
           <Text style={styles.label}>Lives Remain</Text>
@@ -130,13 +129,6 @@ const styles = StyleSheet.create({
   boardContainer: {
     flex: 1,
     marginTop: 100,
-  },
-  headerSection: {
-    alignItems: "center",
-  },
-  appLabel: {
-    fontSize: 24,
-    fontWeight: "bold",
   },
   scoreSection: {
     marginTop: 30,
