@@ -1,6 +1,6 @@
 import { StyleSheet, View } from "react-native";
-import { GameBoard } from "./screens/GameBoard";
-import { Colors } from "./constants/color";
+import { GameBoard } from "./src/screens/GameBoard";
+import { Colors } from "./src/constants/color";
 
 export default function App() {
   return (

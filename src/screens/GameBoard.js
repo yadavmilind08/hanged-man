@@ -1,9 +1,9 @@
 import { Alert, StyleSheet, Text, View } from "react-native";
 import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { wordList } from "../../constants/word-list";
-import { Input } from "../../components/Input";
-import { Button } from "../../components/Button";
+import { wordList } from "../constants/word-list";
+import { Input } from "../components/Input";
+import { Button } from "../components/Button";
 
 export const GameBoard = () => {
   const [value, setValue] = useState("");
