@@ -123,10 +123,10 @@ export const GameBoard = () => {
 const styles = StyleSheet.create({
   boardContainer: {
     flex: 1,
-    marginTop: 100,
+    marginTop: 30,
   },
   scoreSection: {
-    marginTop: 30,
+    marginTop: 50,
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
