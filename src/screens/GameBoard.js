@@ -43,7 +43,8 @@ export const GameBoard = () => {
   };
 
   const onChangeHandler = (val) => {
-    setValue(val);
+    const replacedVal = val.replace(/[^A-Za-z]/gi, "");
+    setValue(replacedVal);
   };
 
   const onSuccess = (message) => {
