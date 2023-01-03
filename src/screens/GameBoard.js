@@ -31,6 +31,14 @@ export const GameBoard = () => {
     getWord();
   }, []);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setMsg("");
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, [msg]);
+
   const getWord = () => {
     const index = Math.floor(Math.random() * 100);
     setWord(wordList[index]);
@@ -40,16 +48,9 @@ export const GameBoard = () => {
     setValue(val);
   };
 
-  const setAndClearMsg = (message) => {
-    setMsg(message);
-    setTimeout(() => {
-      setMsg("");
-    }, 1500);
-  };
-
   const onSuccess = (message) => {
     setTimeout(() => {
-      setAndClearMsg(message);
+      setMsg(message);
       setRemainingLives(7);
       setLetters([]);
       getWord();
@@ -57,7 +58,7 @@ export const GameBoard = () => {
   };
 
   const onGameEnd = (message) => {
-    setAndClearMsg(message);
+    setMsg(message);
     setRemainingLives(7);
     setScore(0);
     setLetters([]);
@@ -80,7 +81,7 @@ export const GameBoard = () => {
           }
           onSuccess(`Hurray! You guessed whole word "${word}"`);
         } else {
-          setAndClearMsg(`You guessed "${value}" from hidden word`);
+          setMsg(`You guessed "${value}" from hidden word`);
         }
       }
     } else {
@@ -89,7 +90,7 @@ export const GameBoard = () => {
       if (lives === 0) {
         onGameEnd("Game End. You don't have life.");
       } else {
-        setAndClearMsg("Wrong Input, Try again");
+        setMsg("Wrong Input, Try again");
       }
     }
     setValue("");
