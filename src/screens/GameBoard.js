@@ -1,4 +1,4 @@
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { wordList } from "../constants/word-list";
@@ -7,6 +7,7 @@ import { Button } from "../components/Button";
 import { Header } from "../components/Header";
 import { Score } from "../components/Score";
 import { Word } from "../components/Word";
+import { Card } from "../components/Card";
 
 export const GameBoard = () => {
   const [value, setValue] = useState("");
@@ -15,6 +16,7 @@ export const GameBoard = () => {
   const [score, setScore] = useState(0);
   const [topScore, setTopScore] = useState(0);
   const [letters, setLetters] = useState([]);
+  const [msg, setMsg] = useState("");
 
   useEffect(() => {
     async function fetchTopScore() {
@@ -38,13 +40,24 @@ export const GameBoard = () => {
     setValue(val);
   };
 
-  const onSuccessHandler = () => {
-    setRemainingLives(7);
-    setLetters([]);
-    getWord();
+  const setAndClearMsg = (message) => {
+    setMsg(message);
+    setTimeout(() => {
+      setMsg("");
+    }, 1500);
   };
 
-  const onEndHandler = () => {
+  const onSuccess = (message) => {
+    setTimeout(() => {
+      setAndClearMsg(message);
+      setRemainingLives(7);
+      setLetters([]);
+      getWord();
+    }, 1000);
+  };
+
+  const onGameEnd = (message) => {
+    setAndClearMsg(message);
     setRemainingLives(7);
     setScore(0);
     setLetters([]);
@@ -65,32 +78,18 @@ export const GameBoard = () => {
             setTopScore(totalScore);
             AsyncStorage.setItem("topScore", totalScore.toString());
           }
-          Alert.alert(
-            "Congatulations",
-            `
-            You guessed whole word
-            `,
-            [{ text: "Ok", onPress: () => onSuccessHandler() }]
-          );
+          onSuccess(`Hurray! You guessed whole word "${word}"`);
         } else {
-          Alert.alert(
-            "Correct",
-            `
-            You guessed "${value}"
-            `,
-            [{ text: "Ok" }]
-          );
+          setAndClearMsg(`You guessed "${value}" from hidden word`);
         }
       }
     } else {
       const lives = remainingLives - 1;
       setRemainingLives(lives);
       if (lives === 0) {
-        Alert.alert("Game End", "You don't have life.", [
-          { text: "Restart", onPress: () => onEndHandler() },
-        ]);
+        onGameEnd("Game End. You don't have life.");
       } else {
-        Alert.alert("Wrong Input", "Try again", [{ text: "Ok" }]);
+        setAndClearMsg("Wrong Input, Try again");
       }
     }
     setValue("");
@@ -115,6 +114,7 @@ export const GameBoard = () => {
         </View>
       </View>
       <Word wordLetters={word.split("")} triedLetters={letters} />
+      {msg && <Card>{msg}</Card>}
     </View>
   );
 };
