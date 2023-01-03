@@ -1,6 +1,5 @@
 import { StyleSheet, View } from "react-native";
 import { useState, useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { wordList } from "../constants/word-list";
 import { Input } from "../components/Input";
 import { Button } from "../components/Button";
@@ -8,6 +7,7 @@ import { Header } from "../components/Header";
 import { Score } from "../components/Score";
 import { Word } from "../components/Word";
 import { Card } from "../components/Card";
+import { useLocalStorage } from "../hooks/useLocalStorage";
 
 export const GameBoard = () => {
   const [value, setValue] = useState("");
@@ -17,14 +17,12 @@ export const GameBoard = () => {
   const [topScore, setTopScore] = useState(0);
   const [letters, setLetters] = useState([]);
   const [msg, setMsg] = useState("");
+  const [getTopScore, setTopScoreValue] = useLocalStorage("topScore", 0);
 
   useEffect(() => {
     async function fetchTopScore() {
-      const storedTopScore = await AsyncStorage.getItem("topScore");
-
-      if (storedTopScore) {
-        setTopScore(+storedTopScore);
-      }
+      const storedTopScore = await getTopScore();
+      setTopScore(storedTopScore);
     }
 
     fetchTopScore();
@@ -77,7 +75,7 @@ export const GameBoard = () => {
           setScore(totalScore);
           if (totalScore >= topScore) {
             setTopScore(totalScore);
-            AsyncStorage.setItem("topScore", totalScore.toString());
+            setTopScoreValue(totalScore);
           }
           onSuccess(`Hurray! You guessed whole word "${word}"`);
         } else {
