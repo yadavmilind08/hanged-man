@@ -13,18 +13,11 @@ export const GameBoard = () => {
   const [value, setValue] = useState("");
   const [remainingLives, setRemainingLives] = useState(7);
   const [score, setScore] = useState(0);
-  const [topScore, setTopScore] = useState(0);
   const [letters, setLetters] = useState([]);
   const [msg, setMsg] = useState("");
-  const [getTopScore, setTopScoreValue] = useLocalStorage("topScore", 0);
+  const [topScore, setTopScore] = useLocalStorage("topScore", 0);
 
   useEffect(() => {
-    async function fetchTopScore() {
-      const storedTopScore = await getTopScore();
-      setTopScore(storedTopScore);
-    }
-
-    fetchTopScore();
     getWord();
   }, []);
 
@@ -39,7 +32,6 @@ export const GameBoard = () => {
   useEffect(() => {
     if (score > topScore) {
       setTopScore(score);
-      setTopScoreValue(score);
     }
   }, [score]);
 

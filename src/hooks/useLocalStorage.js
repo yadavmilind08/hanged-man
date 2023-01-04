@@ -1,17 +1,24 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useState } from "react";
 
 export const useLocalStorage = (key, initialValue) => {
+  const [value, setValue] = useState(initialValue);
+
+  useEffect(() => {
+    getItem();
+  }, []);
+
   const getItem = async () => {
     const storedValue = await AsyncStorage.getItem(key);
     if (storedValue) {
-      return storedValue;
+      setValue(storedValue);
     }
-    return initialValue;
   };
 
   const setItem = (val) => {
     AsyncStorage.setItem(key, val.toString());
+    setValue(val);
   };
 
-  return [getItem, setItem];
+  return [value, setItem];
 };
