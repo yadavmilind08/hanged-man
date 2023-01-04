@@ -1,12 +1,12 @@
 import { StyleSheet, Text, View } from "react-native";
 
-export const Word = ({ wordLetters, triedLetters }) => {
+export const Word = ({ letters }) => {
   return (
     <View style={styles.wordSection}>
-      {wordLetters.map((w, index) => (
+      {letters.map((letter, index) => (
         <View key={index}>
           <Text style={styles.letter}>
-            {triedLetters.includes(w) ? w : "_"}
+            {letter.isMatched ? letter.value : "_"}
           </Text>
         </View>
       ))}

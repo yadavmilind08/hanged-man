@@ -11,7 +11,6 @@ import { useLocalStorage } from "../hooks/useLocalStorage";
 
 export const GameBoard = () => {
   const [value, setValue] = useState("");
-  const [word, setWord] = useState("");
   const [remainingLives, setRemainingLives] = useState(7);
   const [score, setScore] = useState(0);
   const [topScore, setTopScore] = useState(0);
@@ -37,9 +36,29 @@ export const GameBoard = () => {
     return () => clearTimeout(timer);
   }, [msg]);
 
+  useEffect(() => {
+    if (score > topScore) {
+      setTopScore(score);
+      setTopScoreValue(score);
+    }
+  }, [score]);
+
+  useEffect(() => {
+    if (remainingLives === 0) {
+      setMsg("Game End. You don't have life.");
+      setRemainingLives(7);
+      setScore(0);
+      setLetters([]);
+      getWord();
+    }
+  }, [remainingLives]);
+
   const getWord = () => {
     const index = Math.floor(Math.random() * 100);
-    setWord(wordList[index]);
+    const letterArr = wordList[index].split("").map((x) => {
+      return { value: x, isMatched: false };
+    });
+    setLetters(letterArr);
   };
 
   const onChangeHandler = (val) => {
@@ -56,40 +75,28 @@ export const GameBoard = () => {
     }, 1000);
   };
 
-  const onGameEnd = (message) => {
-    setMsg(message);
-    setRemainingLives(7);
-    setScore(0);
-    setLetters([]);
-    getWord();
-  };
-
   const onSubmitHandler = () => {
-    const result = word.split("").find((x) => x === value);
-    if (result) {
-      if (!letters.includes(value)) {
-        const newLetters = [...letters, value];
-        setLetters(newLetters);
-
-        if (word.split("").every((x) => newLetters.includes(x))) {
-          const totalScore = score + 1;
-          setScore(totalScore);
-          if (totalScore >= topScore) {
-            setTopScore(totalScore);
-            setTopScoreValue(totalScore);
-          }
-          onSuccess(`Hurray! You guessed whole word "${word}"`);
-        } else {
-          setMsg(`You guessed "${value}" from hidden word`);
-        }
+    let isMatched = false;
+    const newLetterArr = letters.map((x) => {
+      if (x.value === value) {
+        isMatched = true;
+        return { ...x, isMatched: true };
+      }
+      return x;
+    });
+    setLetters(newLetterArr);
+    if (isMatched) {
+      if (newLetterArr.every((x) => x.isMatched)) {
+        setScore((prevScore) => prevScore + 1);
+        onSuccess(`Hurray! You guessed whole word`);
+      } else {
+        setMsg(`You guessed "${value}" from hidden word`);
       }
     } else {
       const lives = remainingLives - 1;
       setRemainingLives(lives);
-      if (lives === 0) {
-        onGameEnd("Game End. You don't have life.");
-      } else {
-        setMsg("Wrong Input, Try again");
+      if (lives > 0) {
+        setMsg("Wrong Input, Try again!");
       }
     }
     setValue("");
@@ -113,7 +120,7 @@ export const GameBoard = () => {
           </Button>
         </View>
       </View>
-      <Word wordLetters={word.split("")} triedLetters={letters} />
+      <Word letters={letters} />
       {msg && <Card>{msg}</Card>}
     </View>
   );
